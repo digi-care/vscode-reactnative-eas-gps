@@ -4,40 +4,6 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "expo: publish (statging)",
-            "type": "shell",
-            "command": "expo",
-            "args": [
-                "publish",
-                "--release-channel",
-                "staging",
-            ],
-            "problemMatcher": [],
-            "group": {
-                "kind": "build",
-            },
-        },
-        {
-            "label": "expo: publish:history",
-            "type": "shell",
-            "command": "expo",
-            "args": [
-                "publish:history",
-            ],
-            "problemMatcher": [],
-        },
-        {
-            "label": "expo: publish:details",
-            "type": "shell",
-            "command": "expo",
-            "args": [
-                "publish:details",
-                "--publish-id",
-                "${input:publicationId}",
-            ],
-            "problemMatcher": [],
-        },
-        {
             "label": "eas: local build (preview/android)",
             "type": "shell",
             "command": "eas",

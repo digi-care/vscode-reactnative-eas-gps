@@ -1,5 +1,5 @@
 {
-  "name": "EasReactNativeApp",
+  "name": "eas-react-native-app",
   "version": "0.0.0-alpha.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
