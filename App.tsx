@@ -1,111 +1,70 @@
-import React, { useState } from "react";
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import DeviceModal from "./DeviceConnectionModal";
-import { PulseIndicator } from "./PulseIndicator";
-import useBLE from "./useBLE";
+import React from 'react';
+//import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View, TouchableOpacity, Platform } from 'react-native';
+import MapView from 'react-native-maps';
+//import * as Permissions from "expo-permissions";
+import * as Location from 'expo-location';  // https://arnav25.medium.com/background-location-tracking-in-react-native-d03bb7652602
 
-const App = () => {
-  const {
-    requestPermissions,
-    scanForPeripherals,
-    allDevices,
-    connectToDevice,
-    connectedDevice,
-    heartRate,
-    disconnectFromDevice,
-  } = useBLE();
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+export default function App() {
+  const [currentLocation, setCurrentLocation] = React.useState({ latitude: 0, longitude: 0 });
+  const [hasCurrentLocation, setHasCurrentLocation] = React.useState(false);
 
-  const scanForDevices = async () => {
-    const isPermissionsEnabled = await requestPermissions();
-    if (isPermissionsEnabled) {
-      scanForPeripherals();
+  const refreshCurrentLocation = async () => {
+    const pos = await Location.getCurrentPositionAsync({});
+    console.log('Current Position:', pos);
+    setHasCurrentLocation(true);
+    setCurrentLocation({ latitude: pos.coords.latitude, longitude: pos.coords.longitude });
+  };
+
+  const config = async () => {
+    const resf = await Location.requestForegroundPermissionsAsync();
+    const resb = await Location.requestBackgroundPermissionsAsync();
+    if (resf.status != 'granted' && resb.status !== 'granted') {
+      console.log('Permission to access location was denied');
+    } else {
+      console.log('Permission to access location granted');
+      refreshCurrentLocation();
     }
   };
 
-  const hideModal = () => {
-    setIsModalVisible(false);
-  };
+  React.useEffect(() => {
+    config();
+  }, []);
 
-  const openModal = async () => {
-    scanForDevices();
-    setIsModalVisible(true);
-  };
-
-  return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.heartRateTitleWrapper}>
-        {connectedDevice ? (
-          <>
-            <PulseIndicator />
-            <Text style={styles.heartRateTitleText}>Your Heart Rate Is:</Text>
-            <Text style={styles.heartRateText}>{heartRate} bpm</Text>
-          </>
-        ) : (
-          <Text style={styles.heartRateTitleText}>
-            Please Connect to a Heart Rate Monitor
-          </Text>
-        )}
+  if (hasCurrentLocation) {
+    return (
+      <View style={styles.container}>
+        <MapView
+          style={{ flex: 1 }}
+          initialRegion={{
+            latitude: currentLocation.latitude,
+            longitude: currentLocation.longitude,
+            latitudeDelta: 0.00922,
+            longitudeDelta: 0.00521,
+          }}
+          showsUserLocation={true}
+        />
       </View>
-      <TouchableOpacity
-        onPress={connectedDevice ? disconnectFromDevice : openModal}
-        style={styles.ctaButton}
-      >
-        <Text style={styles.ctaButtonText}>
-          {connectedDevice ? "Disconnect" : "Connect"}
-        </Text>
-      </TouchableOpacity>
-      <DeviceModal
-        closeModal={hideModal}
-        visible={isModalVisible}
-        connectToPeripheral={connectToDevice}
-        devices={allDevices}
-      />
-    </SafeAreaView>
-  );
-};
+    );
+  } else {
+    return (
+      <View style={styles.textContainer}>
+        <Text>位置情報取得中...</Text>
+      </View>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
+  textContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   container: {
     flex: 1,
-    backgroundColor: "#f2f2f2",
-  },
-  heartRateTitleWrapper: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  heartRateTitleText: {
-    fontSize: 30,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginHorizontal: 20,
-    color: "black",
-  },
-  heartRateText: {
-    fontSize: 25,
-    marginTop: 15,
-  },
-  ctaButton: {
-    backgroundColor: "#FF6060",
-    justifyContent: "center",
-    alignItems: "center",
-    height: 50,
-    marginHorizontal: 20,
-    marginBottom: 5,
-    borderRadius: 8,
-  },
-  ctaButtonText: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "white",
+    backgroundColor: '#fff',
+    justifyContent: 'flex-start',
   },
 });
-
-export default App;

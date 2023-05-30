@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "EasReactNativeApp",
-    "slug": "eas-react-native-app",
+    "name": "EasReactNativeAppGps",
+    "slug": "eas-react-native-app-gps",
     "version": "0.0.0-alpha.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

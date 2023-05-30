@@ -1,5 +1,5 @@
 {
-  "name": "eas-react-native-app",
+  "name": "eas-react-native-app-gps",
   "version": "0.0.0-alpha.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
@@ -9,21 +9,16 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@config-plugins/react-native-ble-plx": "^6.0.0",
-    "@shopify/react-native-skia": "^0.1.172",
     "expo": "~48.0.15",
     "expo-dev-client": "~2.2.1",
     "expo-device": "^5.2.1",
     "expo-status-bar": "~1.4.4",
     "react": "18.2.0",
-    "react-native": "0.71.8",
-    "react-native-base64": "^0.2.1",
-    "react-native-ble-plx": "^2.0.3"
+    "react-native": "0.71.8"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@types/react": "~18.0.14",
-    "@types/react-native-base64": "^0.2.0",
     "typescript": "^4.9.4"
   },
   "private": true
